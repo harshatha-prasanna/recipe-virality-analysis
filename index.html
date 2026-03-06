@@ -33,6 +33,21 @@
             margin-top: -10px;
         }
 
+        .authors {
+            font-size: 0.95em;
+            color: #555;
+            margin-top: 5px;
+        }
+
+        .authors a {
+            color: #e74c3c;
+            text-decoration: none;
+        }
+
+        .authors a:hover {
+            text-decoration: underline;
+        }
+
         .section {
             background-color: #f9f9f9;
             border-left: 4px solid #e74c3c;
@@ -62,12 +77,28 @@
         tr:hover {
             background-color: #f1f1f1;
         }
+
+        footer {
+            margin-top: 60px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            font-size: 0.85em;
+            color: #999;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
     <h1>🍽️ Recipe Virality Analysis</h1>
     <p class="subtitle">Do viral recipes show different engagement timing patterns than non-viral ones?</p>
+    <p class="authors">
+        By 
+        <a href="https://github.com/harshatha-prasanna" target="_blank">Harshatha Prasanna</a> 
+        & 
+        <a href="https://github.com/jazelytong" target="_blank">Jazely Tong</a>
+        &nbsp;·&nbsp; DSC 80, UC San Diego
+    </p>
 
     <h2>Introduction</h2>
     <div class="section">
@@ -138,6 +169,10 @@
             switching to a Random Forest classifier.
         </p>
     </div>
+
+    <footer>
+        Harshatha Prasanna & Jazely Tong · DSC 80 · UC San Diego
+    </footer>
 
 </body>
 </html>
