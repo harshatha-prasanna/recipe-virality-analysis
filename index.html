@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recipe Virality Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px auto;
+            max-width: 800px;
+            padding: 0 20px;
+            color: #333;
+        }
+
+        h1 {
+            color: #2c2c2c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #e74c3c;
+            margin-top: 35px;
+        }
+
+        p {
+            line-height: 1.6;
+            font-size: 1em;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-top: -10px;
+        }
+
+        .section {
+            background-color: #f9f9f9;
+            border-left: 4px solid #e74c3c;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        th {
+            background-color: #e74c3c;
+            color: white;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🍽️ Recipe Virality Analysis</h1>
+    <p class="subtitle">Do viral recipes show different engagement timing patterns than non-viral ones?</p>
+
+    <h2>Introduction</h2>
+    <div class="section">
+        <p>
+            For this project we used the Recipes and Ratings dataset from Food.com. 
+            We were both interested in cooking and wanted to explore how recipes gain 
+            popularity over time. Our main question is whether viral recipes — defined 
+            as the top 10% of recipes by ratings received in their first 90 days — 
+            show stronger early engagement compared to non-viral recipes.
+        </p>
+    </div>
+
+    <h2>Dataset</h2>
+    <div class="section">
+        <p>
+            The dataset contains two files: recipe metadata and user interactions. 
+            We merged them and computed how many days had passed since each recipe's 
+            first ever rating, which let us track early engagement over time.
+            After cleaning, the dataset contained over 80,000 recipes and 700,000+ interactions.
+        </p>
+    </div>
+
+    <h2>Hypothesis Test</h2>
+    <div class="section">
+        <p>
+            <b>Null Hypothesis:</b> The mean number of ratings in the first 30 days 
+            is the same for viral and non-viral recipes.<br><br>
+            <b>Alternative Hypothesis:</b> Viral recipes receive more ratings in their 
+            first 30 days than non-viral recipes.<br><br>
+            We ran a permutation test with 10,000 shuffles. The observed difference 
+            in means was <b>1.10</b> (viral: 2.10, non-viral: 1.00), and the p-value 
+            was <b>p &lt; 0.0001</b>. We rejected the null hypothesis — viral recipes 
+            really do gain traction faster in their early days.
+        </p>
+    </div>
+
+    <h2>Baseline Model</h2>
+    <div class="section">
+        <p>
+            Our baseline was a Logistic Regression model using three features: 
+            <b>n_steps</b>, <b>n_ingredients</b>, and <b>ratings in the first 30 days</b>.
+        </p>
+        <table>
+            <tr>
+                <th>Metric</th>
+                <th>Non-Viral (0)</th>
+                <th>Viral (1)</th>
+            </tr>
+            <tr>
+                <td>Precision</td>
+                <td>0.91</td>
+                <td>1.00</td>
+            </tr>
+            <tr>
+                <td>Recall</td>
+                <td>1.00</td>
+                <td>0.68</td>
+            </tr>
+            <tr>
+                <td>F1-Score</td>
+                <td>0.95</td>
+                <td>0.81</td>
+            </tr>
+        </table>
+        <p>
+            Overall accuracy was 92.6%, but the model only caught 68% of viral recipes. 
+            We plan to improve this in the final model by adding more features and 
+            switching to a Random Forest classifier.
+        </p>
+    </div>
+
+</body>
+</html>
