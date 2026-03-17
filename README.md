@@ -1,6 +1,6 @@
 # Recipe Virality Analysis 
 
-**Contributors:** Harshatha Prasanna and Jazely Tong
+*By Harshatha Prasanna and Jazely Tong*
 
 ---
 
