@@ -37,10 +37,10 @@ The columns most relevant to our analysis are:
 ### Cleaning Steps
  
 1. **Left-merged** recipes with interactions on `recipe_id` to preserve all recipes even with no interactions.
-2. **Replaced ratings of 0 with `NaN`** — Food.com uses 0 to indicate "no rating submitted" rather than a rating of 0.
+2. **Replaced ratings of 0 with `NaN`**: Food.com uses 0 to indicate "no rating submitted" rather than a rating of 0.
 3. **Computed `avg_rating`** per recipe using only non-missing ratings and merged it back onto the recipes dataset.
 4. **Converted interaction dates to datetime** and sorted chronologically within each recipe.
-5. **Computed `days_since_first`** — the number of days elapsed since each recipe's first-ever interaction.
+5. **Computed `days_since_first`**: the number of days elapsed since each recipe's first-ever interaction.
 6. **Defined viral label** using the top 10% threshold of 90-day rating counts (~10% of recipes labeled viral, ~90% non-viral).
  
 ### Missingness Analysis
