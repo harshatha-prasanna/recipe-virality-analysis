@@ -47,10 +47,10 @@ The columns most relevant to our analysis are:
  
 About **6.4% of ratings are missing** (15,036 out of ~231,637 interactions). We ran two permutation tests to understand *why* ratings go missing:
  
-**Test 1 — Rating missingness vs. review missingness (p = 0.665):**
+**Test 1: Rating missingness vs. review missingness (p = 0.665):**
 No significant relationship. Whether or not a user left a written review has nothing to do with whether they left a rating. The missingness here appears **Missing Completely At Random (MCAR)** with respect to reviews.
  
-**Test 2 — Rating missingness vs. n_steps (p = 0.0):**
+**Test 2: Rating missingness vs. n_steps (p = 0.0):**
 Highly significant. Recipes with more steps are systematically more likely to have missing ratings. This suggests **Missing At Random (MAR)** based on recipe complexity, users may attempt complex recipes, interact with the page, but not finish or rate them. This is a meaningful finding since the absence of a rating is itself informative about recipe complexity.
  
 ### Univariate Analysis
@@ -141,7 +141,7 @@ We grouped recipes by viral status and computed the mean of three key features:
 | Observed difference | 1.1034 |
 | P-value | 0.0000 |
  
-**Conclusion:** We reject H₀. Across 10,000 random permutations of the viral labels, not a single one produced a difference as large as what we actually observed. The early engagement gap between viral and non-viral recipes is statistically real — not noise.
+**Conclusion:** We reject H₀. Across 10,000 random permutations of the viral labels, not a single one produced a difference as large as what we actually observed. The early engagement gap between viral and non-viral recipes is statistically real.
  
 ---
  
@@ -189,7 +189,7 @@ For the final model, we switched to a **Random Forest classifier** and added two
  
 | New Feature | Justification |
 |---|---|
-| `minutes` | Cook time may affect engagement — quick recipes get tried (and rated) faster |
+| `minutes` | Cook time may affect engagement, quick recipes get tried (and rated) faster |
 | `avg_rating` | Quality signal; highly-rated recipes may get recommended more aggressively |
  
 **Hyperparameter Tuning** was performed using `GridSearchCV` with 5-fold cross-validation, optimizing for F1-score on the viral class:
