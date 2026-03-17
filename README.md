@@ -1,4 +1,6 @@
-**Contributors:** Harshatha Prasanna and Jazely Tong | DSC 80, UCSD
+# Recipe Virality Analysis 
+
+**Contributors:** Harshatha Prasanna and Jazely Tong
 
 ---
 
@@ -154,6 +156,7 @@ We frame this as a **binary classification** task:
 **Why this framing?** Predicting virality *before* it fully materializes gives a 60-day early warning window. All features used at prediction time are observable by day 30, therefore we are not using future information.
  
 **Evaluation metric:** We prioritize **F1-score on the viral class** over overall accuracy. Since only ~10% of recipes are viral, a model that always predicts "non-viral" would achieve 90% accuracy while being despite not giving us any useful information. F1-score balances precision and recall on the minority class we actually care about identifying.
+
 ---
 
 ## Baseline Model
