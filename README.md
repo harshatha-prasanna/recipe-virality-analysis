@@ -1,6 +1,4 @@
-# Recipe Virality Analysis
-
-**By Harshatha Prasanna and Jazely Tong** | DSC 80, UCSD
+**Contributors:** Harshatha Prasanna and Jazely Tong | DSC 80, UCSD
 
 ---
 
@@ -235,6 +233,16 @@ For the final model, we switched to a **Random Forest classifier** and added two
  
 **Conclusion:** We fail to reject H₀. The tiny 0.78% difference in recall between quick and long recipes is well within the range of random variation. Our model does not appear to systematically disadvantage longer recipes.
  
+---
+
+## Discussion
+
+This project set out to answer one question: **can we predict whether a recipe will go viral before it actually does?** 
+
+We found that virality has almost nothing to do with how good a recipe is. Viral and non-viral recipes are nearly identical in average rating (4.69 vs 4.60) and ingredient complexity (8.98 vs 9.28 ingredients). What separates them is purely **early momentum**, a recipe that gets 2 ratings in its first 30 days is on a fundamentally different trajectory than one that gets 1.
+
+**The big picture takeaway:** On Food.com, recipes don't go viral because they're better, they go viral because they get noticed early. If you want to predict the next viral recipe, watch the first 30 days.
+
 ---
  
 *Harshatha Prasanna & Jazely Tong — DSC 80, UC San Diego*
