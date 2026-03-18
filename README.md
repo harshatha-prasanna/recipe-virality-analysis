@@ -55,17 +55,11 @@ The table below shows the head of our cleaned recipe-level DataFrame after mergi
 | 286009 | millionaire pound cake | 120 | 7 | 7 | 5.0 |
 | 475785 | 2000 meatloaf | 90 | 17 | 13 | 5.0 |
  
-### Missingness Analysis
- 
-About **6.4% of ratings are missing**. We ran two permutation tests to understand *why* ratings go missing:
- 
-**Test 1: Rating missingness vs. review missingness (p = 0.618):**  
-No significant relationship. Whether or not a user left a written review does not appear to be associated with whether they left a rating.
- 
-**Test 2: Rating missingness vs. n_steps (p = 0.0):**  
-Highly significant. Recipes with different numbers of steps show different missingness patterns in ratings. This suggests rating missingness depends on recipe complexity-related information.
  
 ### Univariate Analysis
+
+After cleaning and preparing the dataset, we next explore the distributions of key variables to better understand the structure and variability in the data. In particular, we focus on how recipe popularity behaves in the first 90 days.
+
  
 **Distribution of 90-Day Ratings**
  
@@ -126,6 +120,25 @@ We grouped recipes by viral status and computed the mean of three key features:
  
 ---
  
+## Missingness Analysis
+
+About **6.4% of ratings are missing**. We ran two permutation tests to understand *why* ratings go missing:
+ 
+**Test 1: Rating missingness vs. review missingness (p = 0.618):**  
+No significant relationship. Whether or not a user left a written review does not appear to be associated with whether they left a rating.
+ 
+**Test 2: Rating missingness vs. n_steps (p = 0.0):**  
+Highly significant. Recipes with different numbers of steps show different missingness patterns in ratings. This suggests rating missingness depends on recipe complexity-related information. Since the p-value is very small, we reject the null hypothesis. This provides strong evidence that rating missingness depends on the number of steps in a recipe. Recipes with different numbers of steps have different missingness patterns.
+
+<iframe
+  src="assets/steps-missing.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+--- 
+
 ## Hypothesis Testing
 
 **Question:** Do viral recipes genuinely receive more ratings in their first 30 days, or could the observed difference be due to random chance?
