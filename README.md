@@ -160,87 +160,95 @@ We frame this as a **binary classification** task:
 ---
 
 ## Baseline Model
-Our baseline uses **Logistic Regression** with three features inside a `sklearn` Pipeline:
- 
+
+Our baseline model uses **Logistic Regression** inside an `sklearn` Pipeline with three simple recipe-level features:
+
 | Feature | Type | Description |
 |---|---|---|
 | `n_steps` | Quantitative | Number of recipe steps |
 | `n_ingredients` | Quantitative | Number of ingredients |
-| `ratings_30_days` | Quantitative | Ratings received in first 30 days |
- 
-All three features are quantitative and continuous. No ordinal or nominal encoding was required. Features were standardized using `StandardScaler` before fitting.
- 
+| `minutes` | Quantitative | Total cook/prep time |
+
+All three features are quantitative, so no categorical encoding was required. We standardized the features using `StandardScaler` before fitting the model.
+
 **Baseline Results:**
- 
+
 | Metric | Non-Viral (0) | Viral (1) |
 |---|---|---|
-| Precision | 0.91 | 1.00 |
-| Recall | 1.00 | 0.68 |
-| F1-Score | 0.95 | 0.81 |
-| **Overall Accuracy** | | **0.9256** |
- 
-The baseline model already achieves a viral-class F1 of **0.81** and a precision of **1.00**, meaning that every recipe it labels as viral actually is viral. However when looking at recall, it misses about 32% of truly viral recipes. This is a strong baseline, suggesting the early engagement signal (`ratings_30_days`) is highly informative on its own.
- 
+| Precision | 0.78 | 0.25 |
+| Recall | 0.45 | 0.59 |
+| F1-Score | 0.57 | 0.35 |
+| **Overall Accuracy** | | **0.4826** |
+
+This baseline model performs poorly overall, especially on the viral class, where the F1-score is only **0.3510**. This is expected, since the model only uses simple recipe structure features and does not yet include any early engagement information. As a result, the baseline gives us a meaningful point of comparison for testing whether richer features can substantially improve performance.
+
 ---
- 
+
 ## Final Model and Conclusions
 
-For the final model, we switched to a **Random Forest classifier** and added two new engineered features:
- 
+For the final model, we switched to a **Random Forest classifier** and added two new features beyond the baseline:
+
 | New Feature | Justification |
 |---|---|
-| `minutes` | Cook time may affect engagement, quick recipes get tried (and rated) faster |
-| `avg_rating` | Quality signal; highly-rated recipes may get recommended more aggressively |
- 
+| `ratings_30_days` | Captures early momentum, which our earlier analysis showed is the strongest distinguishing feature of viral recipes |
+| `avg_rating` | Captures recipe quality and user satisfaction, which may contribute to broader visibility and continued engagement |
+
+The final model therefore used the following features:
+- `n_steps`
+- `n_ingredients`
+- `minutes`
+- `ratings_30_days`
+- `avg_rating`
+
 **Hyperparameter Tuning** was performed using `GridSearchCV` with 5-fold cross-validation, optimizing for F1-score on the viral class:
- 
+
 | Parameter | Values Tried | Best |
 |---|---|---|
 | `n_estimators` | 100, 200 | 100 |
 | `max_depth` | 5, 10, None | 5 |
 | `min_samples_split` | 2, 5, 10 | 2 |
- 
+
 **Final Model Results:**
- 
+
 | Metric | Non-Viral (0) | Viral (1) |
 |---|---|---|
 | Precision | 0.91 | 1.00 |
 | Recall | 1.00 | 0.68 |
 | F1-Score | 0.95 | 0.81 |
 | **Overall Accuracy** | | **0.9256** |
- 
-**Result Analysis:** The final model's scores are identical to the baseline. This is a meaningful finding in itself, suggesting that the `ratings_30_days` feature is so dominant that once it's included, additional features and a more complex model do not provide measurable improvement. Furthermore, the Random Forest confirms the baseline wasn't underfitting.
- 
-> A precision of 1.00 on the viral class means: **when our model says a recipe will go viral, it has never been wrong.** The tradeoff is that the model tends to be convervative, it would rather miss a viral recipe than falsely flag a non-viral one.
- 
+
+**Result Analysis:** The final model substantially improves on the baseline. The viral-class F1-score rises from **0.3510** in the baseline model to **0.8126** in the final model, while overall accuracy increases from **0.4826** to **0.9256**. This large improvement shows that early engagement information, especially `ratings_30_days`, is far more informative for predicting recipe virality than static recipe characteristics alone.
+
+> A precision of 1.00 on the viral class means: **when our model says a recipe will go viral, it has never been wrong in the test set.** The tradeoff is that the model is conservative, meaning it would rather miss some viral recipes than falsely label a non-viral recipe as viral.
+
 ---
 
 ## Fairness Analysis
- 
-**Question:** Does our model perform equally well on "quick" recipes (≤ 35 minutes) vs. "long" recipes (> 35 minutes)?
- 
+
+**Question:** Does our model perform equally well on "quick" recipes (≤ 35 minutes) versus "long" recipes (> 35 minutes)?
+
 - **Group X:** Quick recipes (cook time ≤ 35 minutes, the median)
 - **Group Y:** Long recipes (cook time > 35 minutes)
 - **Metric:** Recall on the viral class
-- **Null Hypothesis:** The model is fair, any difference in recall between quick and long recipes is due to chance
-- **Alternative Hypothesis:** The model is unfair, quick recipes have higher viral recall than long recipes
+- **Null Hypothesis:** The model is fair. Any difference in viral recall between quick and long recipes is due to random chance.
+- **Alternative Hypothesis:** The model is unfair. Its viral recall is lower for long recipes than for quick recipes.
 - **Test Statistic:** Difference in recall (quick − long)
 - **Significance Level:** α = 0.05
- 
+
 | Metric | Value |
 |---|---|
 | Quick recipe recall | 0.6878 |
 | Long recipe recall | 0.6801 |
 | Observed difference | 0.0078 |
-| P-value | 0.669 |
- 
-**Conclusion:** We fail to reject H₀. The tiny 0.78% difference in recall between quick and long recipes is well within the range of random variation. Our model does not appear to systematically disadvantage longer recipes.
- 
+| P-value | 0.723 |
+
+**Conclusion:** We fail to reject H₀. The observed difference in viral recall between quick and long recipes is very small and consistent with random chance. Based on this test, we do not find evidence that the model performs less fairly on long recipes than on quick recipes.
+
 ---
 
 ## Discussion
 
-This project set out to answer one question: **can we predict whether a recipe will go viral before it actually does?** 
+This project set out to answer one question: **can we predict whether a recipe will go viral before it actually does?**
 
 We found that virality has almost nothing to do with how good a recipe is. Viral and non-viral recipes are nearly identical in average rating (4.69 vs 4.60) and ingredient complexity (8.98 vs 9.28 ingredients). What separates them is purely **early momentum**, a recipe that gets 2 ratings in its first 30 days is on a fundamentally different trajectory than one that gets 1.
 
