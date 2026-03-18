@@ -32,7 +32,7 @@ The columns most relevant to our analysis are:
  
 ---
 
-## Data Cleaning and EDA
+## Data Cleaning and Exploratory Data Analysis
 
 ### Cleaning Steps
  
@@ -42,6 +42,18 @@ The columns most relevant to our analysis are:
 4. **Converted interaction dates to datetime** and sorted chronologically within each recipe.
 5. **Computed `days_since_first`**: the number of days elapsed since each recipe's first-ever interaction.
 6. **Defined viral label** using the 90th percentile threshold of 90-day rating counts.
+
+### Head of Cleaned DataFrame
+
+The table below shows the head of our cleaned recipe-level DataFrame after merging in the average rating per recipe.
+
+| id | name | minutes | n_steps | n_ingredients | avg_rating |
+|---:|---|---:|---:|---:|---:|
+| 333281 | 1 brownies in the world best ever | 40 | 10 | 9 | 4.0 |
+| 453467 | 1 in canada chocolate chip cookies | 45 | 12 | 11 | 5.0 |
+| 306168 | 412 broccoli casserole | 40 | 6 | 9 | 5.0 |
+| 286009 | millionaire pound cake | 120 | 7 | 7 | 5.0 |
+| 475785 | 2000 meatloaf | 90 | 17 | 13 | 5.0 |
  
 ### Missingness Analysis
  
@@ -123,7 +135,9 @@ We grouped recipes by viral status and computed the mean of three key features:
 - **Test Statistic:** Difference in group means (viral − non-viral)
 - **Significance Level:** α = 0.05
 - **Method:** Permutation test with 10,000 shuffles
- 
+
+We use a permutation test because it does not rely on distributional assumptions and is appropriate for comparing group means. The difference in means is a natural choice of test statistic since our question focuses on whether early engagement differs between viral and non-viral recipes.
+
 **Permutation Test Results**
  
 <iframe
@@ -140,7 +154,7 @@ We grouped recipes by viral status and computed the mean of three key features:
 | Observed difference | 1.1034 |
 | P-value | 0.0000 |
  
-**Conclusion:** We reject H₀. The observed difference in early engagement is too large to be explained by random chance alone. Viral recipes receive significantly more ratings in their first 30 days than non-viral recipes.
+**Conclusion:** We reject H₀. There is strong statistical evidence that viral recipes tend to receive more ratings in their first 30 days than non-viral recipes.
  
 ---
  
@@ -250,7 +264,7 @@ The final model used the following features:
 
 This project set out to answer one question: **can we predict whether a recipe will go viral before it actually does?**
 
-We found that virality has almost nothing to do with how good a recipe is. Viral and non-viral recipes are nearly identical in average rating (4.69 vs 4.60) and ingredient complexity (8.98 vs 9.28 ingredients). What separates them is purely **early momentum**, a recipe that gets 2 ratings in its first 30 days is on a fundamentally different trajectory than one that gets 1.
+We found that virality appears to have little relationship with average rating. Viral and non-viral recipes are nearly identical in average rating (4.69 vs 4.60) and ingredient complexity (8.98 vs 9.28 ingredients). What separates them is purely **early momentum**, a recipe that gets 2 ratings in its first 30 days is on a fundamentally different trajectory than one that gets 1.
 
 **The big picture takeaway:** On Food.com, recipes don't go viral because they're better, they go viral because they get noticed early. If you want to predict the next viral recipe, watch the first 30 days.
 
