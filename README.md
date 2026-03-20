@@ -143,6 +143,7 @@ For example, users might be less likely to leave a rating if they had a very bad
 experience, meaning the missingness depends on the actual rating value that is missing. 
 To better understand this, it would help to have more data on user satisfaction signals, 
 which could explain the missingness using observed variables instead.
+
 --- 
 
 ## Hypothesis Testing
@@ -217,6 +218,7 @@ All three features are quantitative, so no categorical encoding was required. We
 
 This baseline model performs poorly overall, especially on the viral class, where the F1-score is only **0.3510**. This is expected, since the model only uses simple recipe structure features and does not yet include early engagement information.
 These results are evaluated on a held-out test set, allowing us to assess how well the model generalizes to unseen data. 
+
 ---
 
 ## Final Model and Conclusions
@@ -284,6 +286,7 @@ The final model performance is evaluated on a held-out test set, ensuring that t
 | P-value | 0.331 |
 
 **Conclusion:** We fail to reject H₀. The observed difference in viral recall between quick and long recipes is small and consistent with random chance. Based on this test, we do not find evidence that the model performs worse on long recipes than on quick recipes.
+
 ---
 
 ## Discussion
