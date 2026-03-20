@@ -137,6 +137,12 @@ Highly significant. Recipes with different numbers of steps show different missi
   frameborder="0"
 ></iframe>
 
+Although our results suggest the missingness is related to n_steps (which supports MAR), 
+it is still possible that the rating column is MNAR (Missing Not At Random). 
+For example, users might be less likely to leave a rating if they had a very bad or very good 
+experience, meaning the missingness depends on the actual rating value that is missing. 
+To better understand this, it would help to have more data on user satisfaction signals, 
+which could explain the missingness using observed variables instead.
 --- 
 
 ## Hypothesis Testing
@@ -167,7 +173,7 @@ We use a permutation test because it does not rely on distributional assumptions
 | Observed difference | 1.1034 |
 | P-value | 0.0000 |
  
-**Conclusion:** We reject H₀. There is strong statistical evidence that viral recipes tend to receive more ratings in their first 30 days than non-viral recipes.
+**Conclusion:** We reject H₀. There is strong statistical evidence to suggest that viral recipes tend to receive more ratings in their first 30 days than non-viral recipes, and that this difference is unlikely to be due to random chance.
  
 ---
  
@@ -180,6 +186,8 @@ We frame this as a **binary classification** task:
 **Response variable:** `is_viral` (1 = viral, 0 = non-viral)
  
 **Why this framing?** Predicting virality before it fully materializes helps identify recipes with strong future potential. All features used at prediction time are available by day 30, so we avoid using information from later periods.
+
+For example, features such as the number of ratings, number of reviews, and engagement metrics within the first 30 days are used, while any information beyond this time frame is excluded.
  
 **Evaluation metric:** We prioritize **F1-score on the viral class** over overall accuracy. Since the classes are imbalanced, accuracy alone could be misleading. F1-score better balances precision and recall for the group we care most about identifying.
 
@@ -206,8 +214,9 @@ All three features are quantitative, so no categorical encoding was required. We
 | F1-Score | 0.57 | 0.35 |
 | **Overall Accuracy** |  | **0.4826** |
 
+
 This baseline model performs poorly overall, especially on the viral class, where the F1-score is only **0.3510**. This is expected, since the model only uses simple recipe structure features and does not yet include early engagement information.
- 
+These results are evaluated on a held-out test set, allowing us to assess how well the model generalizes to unseen data. 
 ---
 
 ## Final Model and Conclusions
@@ -228,6 +237,8 @@ The final model used the following features:
 - `steps_per_ingredient`
 - `log_minutes`
 
+All features used in the final model are quantitative, so no categorical encoding was required.
+
 **Hyperparameter Tuning** was performed using `GridSearchCV` with 5-fold cross-validation, optimizing for F1-score on the viral class:
 
 | Parameter | Values Tried | Best |
@@ -246,6 +257,8 @@ The final model used the following features:
 | **Overall Accuracy** |  | **0.9255** |
 
 **Result Analysis:** The final model substantially improves on the baseline. The viral-class F1-score rises from **0.3510** in the baseline model to **0.8125** in the final model, while overall accuracy increases from **0.4826** to **0.9255**. This large improvement shows that early engagement information, especially `ratings_30_days`, is much more informative for predicting recipe virality than static recipe characteristics alone.
+
+The final model performance is evaluated on a held-out test set, ensuring that the improvements reflect better generalization rather than overfitting.
 
 > A precision of 1.00 on the viral class means that in this test set, every recipe predicted to be viral actually was viral. The tradeoff is that the model is conservative, so it misses some viral recipes instead of falsely labeling non-viral recipes as viral.
 
